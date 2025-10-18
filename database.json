@@ -1,0 +1,132 @@
+[
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.752
+    },
+    "data": {
+      "temperature_celsius": 26.1,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0.91
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.752
+    },
+    "data": {
+      "temperature_celsius": 26.1,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0.9
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.752
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0.9
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0.6
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 0
+  },
+  {
+    "guardian_id": "NileGuardian-042",
+    "timestamp": "2025-09-19T18:30:00Z",
+    "location": {
+      "latitude": 28.107,
+      "longitude": 30.654
+    },
+    "data": {
+      "temperature_celsius": 26.5,
+      "turbidity_ntu": 120.5
+    },
+    "battery_level": 5
+  }
+]

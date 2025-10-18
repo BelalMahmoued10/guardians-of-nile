@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الحارس</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #1A202C;
+            --panel-color: #2D3748;
+            --border-color: #4A5568;
+            --text-primary: #E2E8F0;
+            --text-secondary: #A0AEC0;
+            --accent-blue: #3182CE;
+            --font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 { margin: 0; font-size: 2rem; }
+        .header a { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
+        .header i { margin-left: 0.5rem; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--panel-color);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card .label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .stat-card .unit {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-right: 0.5rem;
+        }
+
+        #coords-card {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+        #coords-card .value {
+            font-size: 1.8rem;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="guardian-title">
+                <i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل البيانات...
+            </h1>
+            <a href="map.html"><i class="fa-solid fa-arrow-left"></i> العودة للخريطة</a>
+        </div>
+
+        <div class="dashboard-grid">
+            <div id="temp-card" class="card stat-card">
+                <div class="label"><i class="fa-solid fa-temperature-half"></i> درجة الحرارة الحالية</div>
+                <div class="value">-</div>
+            </div>
+            <div id="turb-card" class="card stat-card">
+                <div class="label"><i class="fa-solid fa-water"></i> مستوى العكارة الحالي</div>
+                <div class="value">-</div>
+            </div>
+            <div id="batt-card" class="card stat-card">
+                <div class="label"><i class="fa-solid fa-battery-full"></i> مستوى البطارية</div>
+                <div class="value">-</div>
+            </div>
+
+            <div id="coords-card" class="card stat-card">
+                <div class="label"><i class="fa-solid fa-location-dot"></i> أحدث إحداثيات GPS</div>
+                <div class="value">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const guardianTitle = document.getElementById('guardian-title');
+        const tempValue = document.querySelector('#temp-card .value');
+        const turbValue = document.querySelector('#turb-card .value');
+        const battValue = document.querySelector('#batt-card .value');
+        const coordsValue = document.querySelector('#coords-card .value');
+
+        const params = new URLSearchParams(window.location.search);
+        const guardianId = params.get('id');
+
+        const fetchDataForGuardian = async () => {
+            if (!guardianId) {
+                guardianTitle.textContent = "خطأ: لم يتم تحديد حارس";
+                return;
+            }
+            
+            guardianTitle.innerHTML = `<i class="fa-solid fa-robot"></i> إحصائيات الحارس: ${guardianId}`;
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/readings/${guardianId}`);
+                const readings = await response.json();
+
+                if (readings.length > 0) {
+                    const latestReading = readings[0];
+                    
+                    tempValue.innerHTML = `${latestReading.data.temperature_celsius}<span class="unit">°C</span>`;
+                    turbValue.innerHTML = `${latestReading.data.turbidity_ntu}<span class="unit">NTU</span>`;
+                    battValue.innerHTML = `${Math.round(latestReading.battery_level * 100)}<span class="unit">%</span>`;
+                    coordsValue.textContent = `${latestReading.location.latitude.toFixed(4)}, ${latestReading.location.longitude.toFixed(4)}`;
+                } else {
+                    // Handle case where a guardian exists but has no readings
+                    tempValue.textContent = 'لا توجد بيانات';
+                    turbValue.textContent = 'لا توجد بيانات';
+                    battValue.textContent = 'لا توجد بيانات';
+                    coordsValue.textContent = 'لا توجد بيانات';
+                }
+
+            } catch (error) {
+                console.error("فشل في جلب بيانات الحارس:", error);
+                guardianTitle.textContent = "لا يمكن تحميل البيانات";
+            }
+        };
+        
+        fetchDataForGuardian();
+    </script>
+</body>
+</html>

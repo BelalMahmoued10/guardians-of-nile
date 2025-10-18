@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عن مشروع - حراس النيل</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #121828;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --accent-blue: #38BDF8;
+            --bg-light: #F8F9FA;
+            --text-dark: #333333;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --font-family: 'Cairo', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        /* --- Navigation (Consistent with index.html) --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: var(--bg-dark);
+        }
+        .logo {
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .logo i { color: var(--accent-blue); }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-blue);
+        }
+
+        /* --- Hero Header --- */
+        .hero-header {
+            background: linear-gradient(rgba(18, 24, 40, 0.85), rgba(18, 24, 40, 0.85)), url('https://images.unsplash.com/photo-1559312219-2a9eb41029e0?q=80&w=2070') no-repeat center center;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .hero-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+        .hero-header p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+            color: var(--text-secondary);
+        }
+
+        /* --- Content Sections --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+        .section { margin-bottom: 60px; }
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            color: var(--bg-dark);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 80px; height: 4px;
+            background-color: var(--accent-blue);
+            margin: 10px auto 0; border-radius: 2px;
+        }
+        .section-intro {
+            text-align: center; font-size: 1.1rem; color: #555;
+            max-width: 800px; margin: 0 auto 40px auto;
+        }
+        
+        /* --- How it Works Section --- */
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .step-card {
+            padding: 30px;
+        }
+        .step-card i {
+            font-size: 3.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+        .step-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--bg-dark);
+        }
+
+        /* --- Team Section --- */
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .team-card {
+            background: white; border-radius: 15px; box-shadow: var(--card-shadow);
+            text-align: center; padding: 30px;
+            transition: transform 0.3s ease;
+            max-width: 320px;
+        }
+        .team-card:hover { transform: translateY(-10px); }
+        .team-card img {
+            width: 130px; height: 130px; border-radius: 50%;
+            border: 5px solid var(--accent-blue);
+            object-fit: cover; margin-bottom: 20px;
+        }
+        .team-card h3 { font-size: 1.6rem; color: var(--bg-dark); font-weight: 700; margin-bottom: 5px; }
+        .team-card p { font-size: 1.1rem; color: #777; font-weight: 600; }
+
+        /* --- Footer --- */
+        .footer {
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="index.html" class="logo"><i class="fa-solid fa-shield-halved"></i> حراس النيل</a>
+        <nav class="nav-links">
+            <a href="index.html">الرئيسية</a>
+            <a href="map.html">الخريطة الحية</a>
+            <a href="about.html" class="active">عن المشروع</a>
+        </nav>
+    </header>
+
+    <header class="hero-header">
+        <h1>عن مشروع حراس النيل</h1>
+        <p>مبادرة تقنية لإعطاء النيل صوتًا مسموعًا، وحماية شريان الحياة بذكاء.</p>
+    </header>
+
+    <main class="container">
+
+        <section class="section">
+            <h2 class="section-title">رؤيتنا</h2>
+            <p class="section-intro">
+                نؤمن بأن الحفاظ على مواردنا المائية يبدأ من فهمها. رؤيتنا هي تحويل نهر النيل من مجرد مجرى مائي صامت إلى نظام بيئي حي يتحدث إلينا، ويخبرنا عن صحته لحظة بلحظة، مما يمكننا جميعًا - أفرادًا ومؤسسات - من اتخاذ قرارات مستنيرة لحمايته للأجيال القادمة.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">كيف يعمل النظام؟</h2>
+            <div class="how-it-works-grid">
+                <div class="step-card">
+                    <i class="fa-solid fa-water"></i>
+                    <h3>1. الانتشار</h3>
+                    <p>يتم إطلاق سرب من "الحراس" (مستشعرات ذكية) لتطفو بحرية في النهر.</p>
+                </div>
+                <div class="step-card">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <h3>2. جمع البيانات</h3>
+                    <p>يقوم كل حارس بقياس مؤشرات جودة المياه (حرارة، عكارة) وإرسالها فورًا مع موقعه الجغرافي.</p>
+                </div>
+                <div class="step-card">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <h3>3. العرض المباشر</h3>
+                    <p>تظهر البيانات على خريطة حية تفاعلية، مما يحول الأرقام إلى قصة بصرية واضحة للجميع.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">الفريق</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="image/me.jpg" alt="صورة مؤسس المشروع">
+                    <h3>بلال محمود سيد</h3>
+                    <p>مؤسس المشروع والمطور الرئيسي</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 حراس النيل. جميع الحقوق محفوظة.</p>
+    </footer>
+
+</body>
+</html>

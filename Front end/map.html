@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حراس النيل - الخريطة</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --background-color: #F2F2F7;
+            --panel-color: #FFFFFF;
+            --text-primary: #1C1C1E;
+            --text-secondary: #8A8A8E;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --font-family: 'Cairo', sans-serif;
+            --danger-color: #FF3B30;
+        }
+        body {
+            font-family: var(--font-family); margin: 0; background-color: var(--background-color); overflow: hidden;
+        }
+        #map { height: 100vh; width: 100vw; z-index: 1; }
+        .guardian-tooltip {
+            background-color: rgba(255, 255, 255, 0.8); border: 1px solid var(--primary-color);
+            border-radius: 0.5rem; padding: 4px 8px; font-weight: 600; font-size: 0.9rem;
+            box-shadow: var(--shadow); white-space: nowrap;
+        }
+        .floating-panel {
+            position: absolute; background-color: var(--panel-color); border-radius: 1.5rem;
+            box-shadow: var(--shadow); padding: 1rem; z-index: 1000; left: 50%;
+            transform: translateX(-50%); display: flex; gap: 0.5rem;
+        }
+        #bottom-nav {
+            bottom: 2rem; width: calc(100% - 3rem); max-width: 500px; justify-content: space-around;
+        }
+        .nav-button {
+            display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+            color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; font-weight: 600;
+        }
+        .nav-button i { font-size: 1.5rem; }
+        .nav-button.active { color: var(--primary-color); }
+        .map-controls {
+            position: absolute; top: 2rem; right: 1.5rem; z-index: 1000;
+            display: flex; flex-direction: column; gap: 0.75rem;
+        }
+        .control-button {
+            width: 50px; height: 50px; background-color: var(--panel-color); border: none;
+            border-radius: 50%; box-shadow: var(--shadow); color: var(--text-primary);
+            font-size: 1.2rem; cursor: pointer; display: grid; place-items: center;
+        }
+        .control-button.active { background-color: var(--primary-color); color: var(--panel-color); }
+        #alert-notification {
+            position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%); z-index: 2000;
+            background-color: var(--danger-color); color: white; padding: 1rem 1.5rem; border-radius: 1rem;
+            box-shadow: var(--shadow); font-weight: 700; display: flex; align-items: center; gap: 1rem;
+            transition: bottom 0.5s ease-in-out;
+        }
+        #alert-notification.show { bottom: 9rem; }
+        #start-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); z-index: 3000; display: flex;
+            justify-content: center; align-items: center; text-align: center; color: white;
+        }
+        #start-btn {
+            padding: 20px 40px; font-size: 2em; font-family: var(--font-family);
+            background-color: var(--primary-color); color: white; border: none;
+            border-radius: 1rem; cursor: pointer; box-shadow: 0 0 20px rgba(0, 122, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <div id="bottom-nav" class="floating-panel">
+        <a href="index.html" class="nav-button"><i class="fa-solid fa-house"></i> <span>الرئيسية</span></a>
+        <a href="map.html" class="nav-button active"><i class="fa-solid fa-map-location-dot"></i> <span>الخريطة</span></a>
+    </div>
+
+    <div class="map-controls">
+        <button id="toggle-satellite" class="control-button" title="تبديل عرض الخريطة"><i class="fa-solid fa-satellite"></i></button>
+        <button id="zoom-in" class="control-button"><i class="fa-solid fa-plus"></i></button>
+        <button id="zoom-out" class="control-button"><i class="fa-solid fa-minus"></i></button>
+        <button id="locate-me" class="control-button"><i class="fa-solid fa-location-crosshairs"></i></button>
+    </div>
+
+    <div id="alert-notification">
+        <i class="fa-solid fa-triangle-exclamation fa-beat"></i>
+        <span id="alert-message"></span>
+    </div>
+
+    <audio id="siren-sound" src="Audio/videoplayback.m4a" preload="auto"></audio>
+
+    <div id="start-overlay">
+        <div>
+            <h1>مراقبة حراس النيل</h1>
+            <button id="start-btn"><i class="fa-solid fa-play"></i> بدء المراقبة الحية</button>
+        </div>
+    </div>
+
+    <script>
+        const map = L.map('map', { zoomControl: false }).setView([26.8206, 30.8025], 6);
+        const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+
+        document.getElementById('zoom-in').addEventListener('click', () => map.zoomIn());
+        document.getElementById('zoom-out').addEventListener('click', () => map.zoomOut());
+        document.getElementById('locate-me').addEventListener('click', () => map.locate({ setView: true, maxZoom: 14 }));
+        
+        const toggleSatelliteBtn = document.getElementById('toggle-satellite');
+        let isSatelliteActive = false;
+        toggleSatelliteBtn.addEventListener('click', () => {
+            if (isSatelliteActive) {
+                map.removeLayer(satelliteMap); map.addLayer(streetMap);
+                toggleSatelliteBtn.classList.remove('active');
+            } else {
+                map.removeLayer(streetMap); map.addLayer(satelliteMap);
+                toggleSatelliteBtn.classList.add('active');
+            }
+            isSatelliteActive = !isSatelliteActive;
+        });
+
+        const alertNotification = document.getElementById('alert-notification');
+        const alertMessage = document.getElementById('alert-message');
+        const sirenSound = document.getElementById('siren-sound');
+        const startOverlay = document.getElementById('start-overlay');
+        const startBtn = document.getElementById('start-btn');
+        let displayedReadingsIds = new Set();
+        let isInitialLoad = true;
+
+        const showAlert = (message) => {
+            alertMessage.textContent = message;
+            alertNotification.classList.add('show');
+            sirenSound.play().catch(error => console.log("User must interact with the page to play sound."));
+            setTimeout(() => {
+                alertNotification.classList.remove('show');
+            }, 5000);
+        };
+
+        const fetchDataAndUpdate = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/v1/readings');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const readings = await response.json();
+                
+                let newReadingsFound = false;
+                readings.forEach(reading => {
+                    if (!displayedReadingsIds.has(reading._id)) {
+                        if (!isInitialLoad) {
+                            newReadingsFound = true;
+                        }
+                        displayedReadingsIds.add(reading._id);
+
+                        const marker = L.marker([reading.location.latitude, reading.location.longitude]).addTo(map);
+                        marker.bindTooltip(reading.guardian_id, {
+                            permanent: true, direction: 'top', className: 'guardian-tooltip', offset: [0, -20]
+                        });
+                        marker.on('click', () => {
+                            window.location.href = `guardian-dashboard.html?id=${reading.guardian_id}`;
+                        });
+                    }
+                });
+                
+                if (newReadingsFound) {
+                    showAlert('تنبيه: تم استقبال بيانات جديدة!');
+                }
+
+                if (isInitialLoad) {
+                    isInitialLoad = false;
+                }
+            } catch (error) {
+                console.error('فشل في جلب البيانات:', error);
+            }
+        };
+
+       // ابحث عن هذا الجزء في الكود
+startBtn.addEventListener('click', () => {
+    
+    // استبدل الكود القديم هنا بهذا الكود الجديد
+    // ---------------------------------------------
+    sirenSound.load(); // نطلب من المتصفح تحميل ملف الصوت استعدادًا لتشغيله
+    const playPromise = sirenSound.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(_ => {
+            // إذا نجح التشغيل، قم بإيقافه فورًا (هذا فقط لفتح "الإذن")
+            sirenSound.pause();
+            sirenSound.currentTime = 0;
+            console.log("تم تفعيل إذن تشغيل الصوت بنجاح.");
+        }).catch(error => {
+            console.error("فشل تفعيل إذن الصوت:", error);
+            // في هذه الحالة، قد لا يعمل الصوت تلقائيًا
+        });
+    }
+    // ---------------------------------------------
+
+    startOverlay.style.display = 'none';
+
+    showAlert('تم تفعيل نظام المراقبة الحية!');
+    fetchDataAndUpdate();
+    setInterval(fetchDataAndUpdate, 5000);
+});
+    </script>
+</body>
+</html>
